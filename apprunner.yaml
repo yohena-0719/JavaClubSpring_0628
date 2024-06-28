@@ -1,0 +1,17 @@
+version: 1.0
+runtime: JAVA_11
+source:
+  type: GitHub
+  repositoryUrl: https://github.com/yohena-0719/JavaClubSpring_0628
+  branch: main
+  sourceDirectory: /
+build:
+  commands:
+    pre_build:
+      - echo "Running pre-build commands"
+    build:
+      - mvn clean install
+    post_build:
+      - echo "Build completed"
+run:
+  command: java -jar target/demo-0.0.1-SNAPSHOT.jar
