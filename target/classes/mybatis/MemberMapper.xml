@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.MemberMapper">
+	<select id="selectAll" resultType="Member">
+		SELECT
+		members.id, members.name,members.age,
+		members.address, members.created,
+		member_types.name AS typeName
+		FROM members
+		JOIN member_types
+		ON members.type_id = member_types.id
+	</select>
+	<select id="selectById" parameterType="int" resultType="Member">
+		SELECT
+		members.id, members.name,members.age,
+		members.address, members.created,
+		members.type_id AS typeId
+		FROM members
+		WHERE members.id = #{id}
+	</select>
+
+	<select id="selectLimited" resultType="Member">
+		SELECT
+		members.id, members.name,members.age,
+		members.address, members.created,
+		member_types.name AS typeName
+		FROM members
+		JOIN member_types
+		ON members.type_id = member_types.id
+		LIMIT #{offset}, #{limit}
+	</select>
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM members
+	</select>
+	<insert id="insert" parameterType="Member">
+		INSERT INTO members (name, age, address, type_id, created)
+		VALUES (#{name}, #{age}, #{address}, #{typeId}, NOW())
+	</insert>
+	<update id="update" parameterType="Member">
+		UPDATE members
+		SET name = #{name}, age = #{age},
+		address = #{address}, type_id = #{typeId}
+		WHERE id = #{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		DELETE FROM members WHERE id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.NewsMapper">
+
+	<resultMap id="joinedResult" type="News" autoMapping="true">
+		<id property="id" column="id" />
+		<association property="detail" javaType="NewsDetail"
+			autoMapping="true" />
+		<collection property="targetList" ofType="MemberType"
+			autoMapping="true">
+			<id property="id" column="type_id" />
+			</collection>
+		
+	</resultMap>
+	
+	<select id="selectAll" resultType="News">
+		SELECT
+		id, title, author, post_date
+		FROM news
+		ORDER BY post_date DESC
+	</select>
+	
+	<select id="selectById" parameterType="int" resultMap="joinedResult">
+		SELECT
+		news.id, news.title, news.author, news.post_date,
+		news_details.article, news_details.photo,
+		member_types.id AS type_id,member_types.name
+		FROM news
+		JOIN news_details
+		ON news.id = news_details.news_id
+		LEFT JOIN news_targets
+		ON news.id = news_targets.news_id
+		LEFT JOIN member_types
+		ON news_targets.type_id = member_types.id
+		WHERE news.id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="News"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO news (title, author, post_date)
+		VALUES (#{title}, #{author}, #{postDate})
+	</insert>
+	
+</mapper> 
